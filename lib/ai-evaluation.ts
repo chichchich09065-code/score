@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { env } from "@/lib/env";
-
 const competencyResultSchema = z.object({
   competencyId: z.number().int().positive(),
   aiScore: z.number().int().min(1).max(5),
@@ -18,6 +16,16 @@ const evaluationOutputSchema = z.object({
 });
 
 export type EvaluationOutput = z.infer<typeof evaluationOutputSchema>;
+
+function getGeminiConfig() {
+  const apiKey = process.env.GEMINI_API_KEY?.trim() || "";
+  const model = process.env.GEMINI_MODEL?.trim() || "gemini-flash-lite-latest";
+
+  return {
+    apiKey,
+    model,
+  };
+}
 
 type EvaluationContext = {
   report: {
@@ -142,15 +150,16 @@ function normalizeGeminiModelName(model: string) {
 }
 
 export function isAiEvaluationConfigured() {
-  return Boolean(env.GEMINI_API_KEY);
+  return Boolean(getGeminiConfig().apiKey);
 }
 
 export async function evaluateReportWithAI(context: EvaluationContext): Promise<EvaluationOutput> {
-  if (!env.GEMINI_API_KEY) {
+  const { apiKey, model: configuredModel } = getGeminiConfig();
+
+  if (!apiKey) {
     throw new Error("GEMINI_API_KEY chưa được cấu hình.");
   }
 
-  const configuredModel = env.GEMINI_MODEL || "gemini-flash-lite-latest";
   const model = normalizeGeminiModelName(configuredModel);
   const prompt = buildEvaluationPrompt(context);
 
@@ -225,7 +234,7 @@ export async function evaluateReportWithAI(context: EvaluationContext): Promise<
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-goog-api-key": env.GEMINI_API_KEY,
+      "x-goog-api-key": apiKey,
     },
     body: JSON.stringify(body),
   });
@@ -237,7 +246,7 @@ export async function evaluateReportWithAI(context: EvaluationContext): Promise<
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": env.GEMINI_API_KEY,
+          "x-goog-api-key": apiKey,
         },
         body: JSON.stringify(body),
       },
