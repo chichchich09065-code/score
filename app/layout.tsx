@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import { getDevSession } from "@/lib/dev-auth";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Score Competency Platform",
   description: "Hệ thống đánh giá khung năng lực với Next.js, Prisma và NextAuth.",

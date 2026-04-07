@@ -6,6 +6,8 @@ import { getDevSession } from "@/lib/dev-auth";
 import { prisma } from "@/lib/prisma";
 import { competencySchema, positionCompetencySchema, positionSchema } from "@/lib/validators";
 
+export const dynamic = "force-dynamic";
+
 async function requireAdminSession() {
   "use server";
 

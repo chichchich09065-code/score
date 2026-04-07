@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 
 import { auth, signIn } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 type LoginPageProps = {
   searchParams?: Promise<{
     error?: string;

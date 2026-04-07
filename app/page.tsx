@@ -2,6 +2,8 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { getDevSession } from "@/lib/dev-auth";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const session = getDevSession() ?? (await auth());
 

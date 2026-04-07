@@ -6,6 +6,8 @@ import { isAiEvaluationConfigured } from "@/lib/ai-evaluation";
 import { prisma } from "@/lib/prisma";
 import { runEvaluationForReport } from "@/lib/report-evaluation";
 
+export const dynamic = "force-dynamic";
+
 type ReportDetailPageProps = {
   params: Promise<{
     id: string;
