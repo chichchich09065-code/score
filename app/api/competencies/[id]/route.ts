@@ -4,6 +4,8 @@ import { requireAdmin, requireAuth } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { competencySchema } from "@/lib/validators";
 
+export const dynamic = "force-dynamic";
+
 type Context = {
   params: Promise<{ id: string }>;
 };

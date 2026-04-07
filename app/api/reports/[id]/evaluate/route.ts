@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/api";
 import { runEvaluationForReport } from "@/lib/report-evaluation";
 
+export const dynamic = "force-dynamic";
+
 type Context = {
   params: Promise<{ id: string }>;
 };

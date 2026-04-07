@@ -4,6 +4,8 @@ import { requireAdmin, requireAuth } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 import { positionSchema } from "@/lib/validators";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const result = await requireAuth();
 
