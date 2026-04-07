@@ -1,24 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { auth } from "@/lib/auth";
-import { getDevSession } from "@/lib/dev-auth";
+import { getAppSession } from "@/lib/session";
 
 export async function requireAuth() {
-  const devSession = getDevSession();
-
-  if (devSession) {
-    return { error: null, session: devSession };
-  }
-
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return {
-      error: NextResponse.json({ message: "Unauthorized" }, { status: 401 }),
-      session: null,
-    };
-  }
-
+  const session = getAppSession();
   return { error: null, session };
 }
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { getDevSession } from "@/lib/dev-auth";
+import { getAppSession } from "@/lib/session";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +15,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = getDevSession() ?? (await auth());
+  const session = getAppSession();
 
   return (
     <html lang="vi">

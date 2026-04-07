@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { getDevSession } from "@/lib/dev-auth";
+import { getAppSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const session = getDevSession() ?? (await auth());
+  const session = getAppSession();
 
   return (
     <main className="space-y-6">

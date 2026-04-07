@@ -1,36 +1,16 @@
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth";
-import { getDevSession } from "@/lib/dev-auth";
 import { prisma } from "@/lib/prisma";
+import { getAppSession } from "@/lib/session";
 import { competencySchema, positionCompetencySchema, positionSchema } from "@/lib/validators";
 
 export const dynamic = "force-dynamic";
 
-async function requireAdminSession() {
-  "use server";
-
-  const session = getDevSession() ?? (await auth());
-
-  if (!session?.user) {
-    redirect("/login");
-  }
-
-  if (session.user.role !== "ADMIN") {
-    redirect("/");
-  }
-
-  return session;
-}
-
 export default async function AdminPage() {
-  const session = await requireAdminSession();
+  const session = getAppSession();
 
   async function createPosition(formData: FormData) {
     "use server";
-
-    await requireAdminSession();
 
     const parsed = positionSchema.safeParse({
       name: String(formData.get("name") ?? ""),
@@ -52,8 +32,6 @@ export default async function AdminPage() {
   async function createCompetency(formData: FormData) {
     "use server";
 
-    await requireAdminSession();
-
     const parsed = competencySchema.safeParse({
       name: String(formData.get("name") ?? ""),
       category: String(formData.get("category") ?? "").trim() || undefined,
@@ -73,8 +51,6 @@ export default async function AdminPage() {
 
   async function linkCompetencyToPosition(formData: FormData) {
     "use server";
-
-    await requireAdminSession();
 
     const parsed = positionCompetencySchema.safeParse({
       competencyId: Number(formData.get("competencyId")),
