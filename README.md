@@ -52,11 +52,3 @@ npm run dev
 `DATABASE_URL` is used by the app at runtime. `DIRECT_URL` is used by Prisma for schema changes and migrations.
 
 See [docs/supabase-setup.md](docs/supabase-setup.md) for a more complete setup flow.
-
-## Core API
-
-- `GET, POST /api/positions`
-- `GET, PATCH, DELETE /api/positions/:id`
-- `POST /api/positions/:id/competencies`
-- `GET, POST /api/competencies`
-- `GET, PATCH, DELETE /api/competencies/:id`
