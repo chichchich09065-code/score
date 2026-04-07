@@ -5,7 +5,6 @@ Starter project for the competency evaluation system using:
 - Next.js 15 App Router
 - TypeScript
 - Prisma + PostgreSQL
-- NextAuth v5 with Credentials and optional Google login
 
 ## Quick start
 
@@ -28,8 +27,8 @@ This project works well with Supabase because it already uses Prisma with Postgr
 ```env
 DATABASE_URL="postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?pgbouncer=true"
 DIRECT_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"
-AUTH_SECRET="your-long-random-secret"
-NEXTAUTH_URL="http://localhost:3000"
+GEMINI_API_KEY=""
+GEMINI_MODEL="gemini-flash-lite-latest"
 ```
 
 4. Generate the Prisma client:
@@ -56,8 +55,6 @@ See [docs/supabase-setup.md](docs/supabase-setup.md) for a more complete setup f
 
 ## Core API
 
-- `POST /api/auth/register`
-- `GET /api/auth/me`
 - `GET, POST /api/positions`
 - `GET, PATCH, DELETE /api/positions/:id`
 - `POST /api/positions/:id/competencies`
