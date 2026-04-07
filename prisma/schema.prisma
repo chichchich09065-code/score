@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  EVALUATING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String?
+  role       Role     @default(USER)
+  positionId Int?
+  name       String
+  department String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  position Position? @relation(fields: [positionId], references: [id], onDelete: SetNull)
+  reports  Report[]
+
+  @@index([positionId])
+  @@index([role])
+  @@index([department])
+}
+
+model Position {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  department  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users                User[]
+  reports              Report[]
+  positionCompetencies PositionCompetency[]
+
+  @@unique([name, department])
+  @@index([department])
+}
+
+model Competency {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?  @db.Text
+  category    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  evaluations          Evaluation[]
+  positionCompetencies PositionCompetency[]
+
+  @@unique([name, category])
+  @@index([category])
+}
+
+model PositionCompetency {
+  positionId     Int
+  competencyId   Int
+  levelRequired  Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  position   Position   @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  competency Competency @relation(fields: [competencyId], references: [id], onDelete: Cascade)
+
+  @@id([positionId, competencyId])
+  @@index([competencyId])
+  @@index([positionId, levelRequired])
+}
+
+model Report {
+  id                       Int          @id @default(autoincrement())
+  userId                   Int
+  positionId               Int
+  title                    String
+  content                  String       @db.Text
+  summary                  String?      @db.Text
+  fileUrl                  String?
+  submittedAt              DateTime     @default(now())
+  status                   ReportStatus @default(SUBMITTED)
+  overallMatchPercentage   Float?
+  strengths                Json?
+  improvements             Json?
+  evaluatedAt              DateTime?
+  createdAt                DateTime     @default(now())
+  updatedAt                DateTime     @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  position    Position     @relation(fields: [positionId], references: [id], onDelete: Restrict)
+  evaluations Evaluation[]
+
+  @@index([userId])
+  @@index([positionId])
+  @@index([status])
+  @@index([submittedAt])
+  @@index([userId, submittedAt])
+}
+
+model Evaluation {
+  id                Int      @id @default(autoincrement())
+  reportId          Int
+  competencyId      Int
+  aiScore           Int
+  aiReason          String   @db.Text
+  aiMatchPercentage Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  report     Report     @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  competency Competency @relation(fields: [competencyId], references: [id], onDelete: Restrict)
+
+  @@unique([reportId, competencyId])
+  @@index([reportId])
+  @@index([competencyId])
+  @@index([aiScore])
+}
