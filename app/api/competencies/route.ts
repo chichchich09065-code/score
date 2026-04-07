@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { competencySchema } from "@/lib/validators";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const revalidate = 0;
 
 export async function GET() {
   const result = await requireAuth();

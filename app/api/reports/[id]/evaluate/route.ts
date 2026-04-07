@@ -4,6 +4,8 @@ import { requireAdmin } from "@/lib/api";
 import { runEvaluationForReport } from "@/lib/report-evaluation";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const revalidate = 0;
 
 type Context = {
   params: Promise<{ id: string }>;
